@@ -1,16 +1,21 @@
+import nu.studer.gradle.jooq.JooqEdition
+
 plugins {
     id 'java'
     id 'org.springframework.boot' version '3.3.2'
     id 'io.spring.dependency-management' version '1.1.6'
+    id 'nu.studer.jooq' version '9.0'
 }
 
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 
+
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
     }
+    sourceCompatibility = '17'
 }
 
 configurations {
@@ -27,13 +32,92 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'org.postgresql:postgresql'
-    annotationProcessor 'org.projectlombok:lombok'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+
+    // jooq
+    implementation 'org.springframework.boot:spring-boot-starter-jooq'
+    jooqGenerator 'org.postgresql:postgresql'
 }
 
-tasks.named('test') {
+test {
     useJUnitPlatform()
+}
+
+//apply from: 'jooq.gradle'
+//include 'jooq.gradle'
+
+jooq {
+    version = '3.19.1'  // default (can be omitted)
+    edition = JooqEdition.OSS  // default (can be omitted)
+
+    configurations {
+        main {  // name of the jOOQ configuration
+            generateSchemaSourceOnCompilation = true  // default (can be omitted)
+
+            generationTool {
+                logging = org.jooq.meta.jaxb.Logging.INFO
+                jdbc {
+                    driver = 'org.postgresql.Driver'
+                    url = 'jdbc:postgresql://tht1234551.asuscomm.com:5432/postgres'
+                    user = 'admin'
+                    password = 'admin'
+//                    properties {
+//                        property {
+//                            key = 'ssl'
+//                            value = 'true'
+//                        }
+//                    }
+                }
+                generator {
+                    name = 'org.jooq.codegen.DefaultGenerator'
+                    database {
+                        name = 'org.jooq.meta.postgres.PostgresDatabase'
+                        inputSchema = 'public'
+                        includes = '.*'
+                        excludes = ''
+                        forcedTypes {
+                            forcedType {
+                                name = 'varchar'
+                                includeExpression = '.*'
+                                includeTypes = 'JSONB?'
+                            }
+                            forcedType {
+                                name = 'varchar'
+                                includeExpression = '.*'
+                                includeTypes = 'INET'
+                            }
+                        }
+                    }
+                    generate {
+                        deprecated = true
+                        records = true
+                        immutablePojos = true
+                        fluentSetters = true
+                    }
+                    target {
+                        packageName = 'com.example.postgres/model'
+                        directory = 'target/generated-sources/jooq'
+                        encoding = "UTF-8"
+                        locale = "kr"
+//                        clean = false
+                    }
+                    strategy.name = 'org.jooq.codegen.DefaultGeneratorStrategy'
+                }
+            }
+        }
+    }
+}
+
+tasks.named('generateJooq').configure {
+    allInputsDeclared = true
+    launcher = javaToolchains.launcherFor {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
 }
