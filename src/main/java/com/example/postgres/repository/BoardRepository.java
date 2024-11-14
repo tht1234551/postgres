@@ -1,7 +1,7 @@
 package com.example.postgres.repository;
 
 import com.example.postgres.model.Tables;
-import com.example.postgres.model.tables.pojos.TblBoard;
+import com.example.postgres.model.tables.pojos.Board;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
@@ -14,34 +14,34 @@ public class BoardRepository {
 
     private final DSLContext dsl;
 
-    public List<TblBoard> findAll() {
-        return dsl.selectFrom(Tables.TBL_BOARD)
-                .fetchInto(TblBoard.class);
+    public List<Board> findAll() {
+        return dsl.selectFrom(Tables.BOARD)
+                .fetchInto(Board.class);
     }
 
 
-    public TblBoard findById(Long id) {
-        return dsl.selectFrom(Tables.TBL_BOARD)
-                .where(Tables.TBL_BOARD.NO.eq(id))
-                .fetchOneInto(TblBoard.class);
+    public Board findById(Long id) {
+        return dsl.selectFrom(Tables.BOARD)
+                .where(Tables.BOARD.NO.eq(id))
+                .fetchOneInto(Board.class);
     }
 
-    public int save(TblBoard board) {
-        return dsl.insertInto(Tables.TBL_BOARD)
-                .set(dsl.newRecord(Tables.TBL_BOARD, board))
+    public int save(Board board) {
+        return dsl.insertInto(Tables.BOARD)
+                .set(dsl.newRecord(Tables.BOARD, board))
                 .execute();
     }
 
-    public int update(TblBoard board) {
-        return dsl.update(Tables.TBL_BOARD)
-                .set(dsl.newRecord(Tables.TBL_BOARD, board))
-                .where(Tables.TBL_BOARD.NO.eq(board.getId()))
+    public int update(Board board) {
+        return dsl.update(Tables.BOARD)
+                .set(dsl.newRecord(Tables.BOARD, board))
+                .where(Tables.BOARD.NO.eq(board.getNo()))
                 .execute();
     }
 
     public int delete(Long id) {
-        return dsl.deleteFrom(Tables.TBL_BOARD)
-                .where(Tables.TBL_BOARD.NO.eq(id))
+        return dsl.deleteFrom(Tables.BOARD)
+                .where(Tables.BOARD.NO.eq(id))
                 .execute();
     }
 
