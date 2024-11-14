@@ -83,27 +83,34 @@ jooq {
                         includes = '.*'
                         excludes = ''
                         forcedTypes {
+//                            forcedType {
+//                                name = 'varchar'
+//                                includeExpression = '.*'
+//                                includeTypes = 'JSONB?'
+//                            }
+//                            forcedType {
+//                                name = 'varchar'
+//                                includeExpression = '.*'
+//                                includeTypes = 'INET'
+//                            }
                             forcedType {
-                                name = 'varchar'
+                                name = 'BIGINT'
                                 includeExpression = '.*'
-                                includeTypes = 'JSONB?'
-                            }
-                            forcedType {
-                                name = 'varchar'
-                                includeExpression = '.*'
-                                includeTypes = 'INET'
+                                includeTypes = 'BIGINT'
                             }
                         }
                     }
                     generate {
-                        deprecated = true
+                        deprecated = false
                         records = true
                         immutablePojos = true
                         fluentSetters = true
                     }
                     target {
-                        packageName = 'com.example.postgres/model'
-                        directory = 'target/generated-sources/jooq'
+//                        packageName = 'com.example.postgres.model'
+//                        directory = 'target/generated-sources/jooq'
+                        packageName = "com.example.postgres.model"
+                        directory = "src/main/java"
                         encoding = "UTF-8"
                         locale = "kr"
 //                        clean = false
@@ -121,3 +128,4 @@ tasks.named('generateJooq').configure {
         languageVersion = JavaLanguageVersion.of(17)
     }
 }
+
