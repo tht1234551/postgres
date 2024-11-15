@@ -5,7 +5,7 @@ package com.example.postgres.model.tables.pojos;
 
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 /**
@@ -20,16 +20,16 @@ public class Board implements Serializable {
     private final String title;
     private final String content;
     private final String writer;
-    private final LocalDate createAt;
-    private final LocalDate updateAt;
+    private final LocalDateTime createdAt;
+    private final LocalDateTime updatedAt;
 
     public Board(Board value) {
         this.no = value.no;
         this.title = value.title;
         this.content = value.content;
         this.writer = value.writer;
-        this.createAt = value.createAt;
-        this.updateAt = value.updateAt;
+        this.createdAt = value.createdAt;
+        this.updatedAt = value.updatedAt;
     }
 
     public Board(
@@ -37,15 +37,15 @@ public class Board implements Serializable {
         String title,
         String content,
         String writer,
-        LocalDate createAt,
-        LocalDate updateAt
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt
     ) {
         this.no = no;
         this.title = title;
         this.content = content;
         this.writer = writer;
-        this.createAt = createAt;
-        this.updateAt = updateAt;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     /**
@@ -77,17 +77,17 @@ public class Board implements Serializable {
     }
 
     /**
-     * Getter for <code>public.board.create_at</code>.
+     * Getter for <code>public.board.created_at</code>.
      */
-    public LocalDate getCreateAt() {
-        return this.createAt;
+    public LocalDateTime getCreatedAt() {
+        return this.createdAt;
     }
 
     /**
-     * Getter for <code>public.board.update_at</code>.
+     * Getter for <code>public.board.updated_at</code>.
      */
-    public LocalDate getUpdateAt() {
-        return this.updateAt;
+    public LocalDateTime getUpdatedAt() {
+        return this.updatedAt;
     }
 
     @Override
@@ -123,17 +123,17 @@ public class Board implements Serializable {
         }
         else if (!this.writer.equals(other.writer))
             return false;
-        if (this.createAt == null) {
-            if (other.createAt != null)
+        if (this.createdAt == null) {
+            if (other.createdAt != null)
                 return false;
         }
-        else if (!this.createAt.equals(other.createAt))
+        else if (!this.createdAt.equals(other.createdAt))
             return false;
-        if (this.updateAt == null) {
-            if (other.updateAt != null)
+        if (this.updatedAt == null) {
+            if (other.updatedAt != null)
                 return false;
         }
-        else if (!this.updateAt.equals(other.updateAt))
+        else if (!this.updatedAt.equals(other.updatedAt))
             return false;
         return true;
     }
@@ -146,8 +146,8 @@ public class Board implements Serializable {
         result = prime * result + ((this.title == null) ? 0 : this.title.hashCode());
         result = prime * result + ((this.content == null) ? 0 : this.content.hashCode());
         result = prime * result + ((this.writer == null) ? 0 : this.writer.hashCode());
-        result = prime * result + ((this.createAt == null) ? 0 : this.createAt.hashCode());
-        result = prime * result + ((this.updateAt == null) ? 0 : this.updateAt.hashCode());
+        result = prime * result + ((this.createdAt == null) ? 0 : this.createdAt.hashCode());
+        result = prime * result + ((this.updatedAt == null) ? 0 : this.updatedAt.hashCode());
         return result;
     }
 
@@ -159,8 +159,8 @@ public class Board implements Serializable {
         sb.append(", ").append(title);
         sb.append(", ").append(content);
         sb.append(", ").append(writer);
-        sb.append(", ").append(createAt);
-        sb.append(", ").append(updateAt);
+        sb.append(", ").append(createdAt);
+        sb.append(", ").append(updatedAt);
 
         sb.append(")");
         return sb.toString();

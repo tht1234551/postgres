@@ -1,15 +1,20 @@
+-- 시퀀스 생성
+DROP SEQUENCE IF EXISTS BOARD_NO_SEQ CASCADE;
+CREATE SEQUENCE BOARD_NO_SEQ START 1 INCREMENT 1;
+
+-- 테이블 생성
 -- DROP TABLE IF EXISTS public.board CASCADE;
 DROP TABLE IF EXISTS public.board;
-
 CREATE TABLE public.board
 (
-    no        bigint             not null primary key,
-    title     varchar(300)       not null,
-    content   varchar(3000)      not null,
-    writer    varchar(300)       not null,
-    create_at date default now() not null,
-    update_at date default now() not null
+    no         BIGINT    DEFAULT nextval('BOARD_NO_SEQ'::regclass) PRIMARY KEY,
+    title      VARCHAR(255) NOT NULL,
+    content    TEXT         NOT NULL,
+    writer     VARCHAR(300) not null,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-ALTER TABLE public.board OWNER TO admin;
+ALTER TABLE public.board
+    OWNER TO admin;
 

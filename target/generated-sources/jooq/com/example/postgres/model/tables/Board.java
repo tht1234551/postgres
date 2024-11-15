@@ -8,11 +8,12 @@ import com.example.postgres.model.Keys;
 import com.example.postgres.model.Public;
 import com.example.postgres.model.tables.records.BoardRecord;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 
 import org.jooq.Condition;
 import org.jooq.Field;
+import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.PlainSQL;
 import org.jooq.QueryPart;
@@ -53,17 +54,17 @@ public class Board extends TableImpl<BoardRecord> {
     /**
      * The column <code>public.board.no</code>.
      */
-    public final TableField<BoardRecord, Long> NO = createField(DSL.name("no"), SQLDataType.BIGINT.nullable(false), this, "");
+    public final TableField<BoardRecord, Long> NO = createField(DSL.name("no"), SQLDataType.BIGINT.nullable(false).identity(true), this, "");
 
     /**
      * The column <code>public.board.title</code>.
      */
-    public final TableField<BoardRecord, String> TITLE = createField(DSL.name("title"), SQLDataType.VARCHAR(300).nullable(false), this, "");
+    public final TableField<BoardRecord, String> TITLE = createField(DSL.name("title"), SQLDataType.VARCHAR(255).nullable(false), this, "");
 
     /**
      * The column <code>public.board.content</code>.
      */
-    public final TableField<BoardRecord, String> CONTENT = createField(DSL.name("content"), SQLDataType.VARCHAR(3000).nullable(false), this, "");
+    public final TableField<BoardRecord, String> CONTENT = createField(DSL.name("content"), SQLDataType.CLOB.nullable(false), this, "");
 
     /**
      * The column <code>public.board.writer</code>.
@@ -71,14 +72,14 @@ public class Board extends TableImpl<BoardRecord> {
     public final TableField<BoardRecord, String> WRITER = createField(DSL.name("writer"), SQLDataType.VARCHAR(300).nullable(false), this, "");
 
     /**
-     * The column <code>public.board.create_at</code>.
+     * The column <code>public.board.created_at</code>.
      */
-    public final TableField<BoardRecord, LocalDate> CREATE_AT = createField(DSL.name("create_at"), SQLDataType.LOCALDATE.nullable(false).defaultValue(DSL.field(DSL.raw("now()"), SQLDataType.LOCALDATE)), this, "");
+    public final TableField<BoardRecord, LocalDateTime> CREATED_AT = createField(DSL.name("created_at"), SQLDataType.LOCALDATETIME(6).defaultValue(DSL.field(DSL.raw("CURRENT_TIMESTAMP"), SQLDataType.LOCALDATETIME)), this, "");
 
     /**
-     * The column <code>public.board.update_at</code>.
+     * The column <code>public.board.updated_at</code>.
      */
-    public final TableField<BoardRecord, LocalDate> UPDATE_AT = createField(DSL.name("update_at"), SQLDataType.LOCALDATE.nullable(false).defaultValue(DSL.field(DSL.raw("now()"), SQLDataType.LOCALDATE)), this, "");
+    public final TableField<BoardRecord, LocalDateTime> UPDATED_AT = createField(DSL.name("updated_at"), SQLDataType.LOCALDATETIME(6).defaultValue(DSL.field(DSL.raw("CURRENT_TIMESTAMP"), SQLDataType.LOCALDATETIME)), this, "");
 
     private Board(Name alias, Table<BoardRecord> aliased) {
         this(alias, aliased, (Field<?>[]) null, null);
@@ -112,6 +113,11 @@ public class Board extends TableImpl<BoardRecord> {
     @Override
     public Schema getSchema() {
         return aliased() ? null : Public.PUBLIC;
+    }
+
+    @Override
+    public Identity<BoardRecord, Long> getIdentity() {
+        return (Identity<BoardRecord, Long>) super.getIdentity();
     }
 
     @Override

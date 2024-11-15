@@ -6,7 +6,7 @@ package com.example.postgres.model.tables.records;
 
 import com.example.postgres.model.tables.Board;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.jooq.Record1;
 import org.jooq.impl.UpdatableRecordImpl;
@@ -81,33 +81,33 @@ public class BoardRecord extends UpdatableRecordImpl<BoardRecord> {
     }
 
     /**
-     * Setter for <code>public.board.create_at</code>.
+     * Setter for <code>public.board.created_at</code>.
      */
-    public BoardRecord setCreateAt(LocalDate value) {
+    public BoardRecord setCreatedAt(LocalDateTime value) {
         set(4, value);
         return this;
     }
 
     /**
-     * Getter for <code>public.board.create_at</code>.
+     * Getter for <code>public.board.created_at</code>.
      */
-    public LocalDate getCreateAt() {
-        return (LocalDate) get(4);
+    public LocalDateTime getCreatedAt() {
+        return (LocalDateTime) get(4);
     }
 
     /**
-     * Setter for <code>public.board.update_at</code>.
+     * Setter for <code>public.board.updated_at</code>.
      */
-    public BoardRecord setUpdateAt(LocalDate value) {
+    public BoardRecord setUpdatedAt(LocalDateTime value) {
         set(5, value);
         return this;
     }
 
     /**
-     * Getter for <code>public.board.update_at</code>.
+     * Getter for <code>public.board.updated_at</code>.
      */
-    public LocalDate getUpdateAt() {
-        return (LocalDate) get(5);
+    public LocalDateTime getUpdatedAt() {
+        return (LocalDateTime) get(5);
     }
 
     // -------------------------------------------------------------------------
@@ -133,15 +133,15 @@ public class BoardRecord extends UpdatableRecordImpl<BoardRecord> {
     /**
      * Create a detached, initialised BoardRecord
      */
-    public BoardRecord(Long no, String title, String content, String writer, LocalDate createAt, LocalDate updateAt) {
+    public BoardRecord(Long no, String title, String content, String writer, LocalDateTime createdAt, LocalDateTime updatedAt) {
         super(Board.BOARD);
 
         setNo(no);
         setTitle(title);
         setContent(content);
         setWriter(writer);
-        setCreateAt(createAt);
-        setUpdateAt(updateAt);
+        setCreatedAt(createdAt);
+        setUpdatedAt(updatedAt);
         resetChangedOnNotNull();
     }
 
@@ -156,8 +156,8 @@ public class BoardRecord extends UpdatableRecordImpl<BoardRecord> {
             setTitle(value.getTitle());
             setContent(value.getContent());
             setWriter(value.getWriter());
-            setCreateAt(value.getCreateAt());
-            setUpdateAt(value.getUpdateAt());
+            setCreatedAt(value.getCreatedAt());
+            setUpdatedAt(value.getUpdatedAt());
             resetChangedOnNotNull();
         }
     }
