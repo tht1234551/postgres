@@ -4,7 +4,12 @@
 package com.example.postgres.model;
 
 
+import com.example.postgres.model.tables.Author;
 import com.example.postgres.model.tables.Board;
+import com.example.postgres.model.tables.Book;
+import com.example.postgres.model.tables.BookStore;
+import com.example.postgres.model.tables.BookToBookStore;
+import com.example.postgres.model.tables.Language;
 
 
 /**
@@ -14,7 +19,32 @@ import com.example.postgres.model.tables.Board;
 public class Tables {
 
     /**
+     * The table <code>public.author</code>.
+     */
+    public static final Author AUTHOR = Author.AUTHOR;
+
+    /**
      * The table <code>public.board</code>.
      */
     public static final Board BOARD = Board.BOARD;
+
+    /**
+     * The table <code>public.book</code>.
+     */
+    public static final Book BOOK = Book.BOOK;
+
+    /**
+     * The table <code>public.book_store</code>.
+     */
+    public static final BookStore BOOK_STORE = BookStore.BOOK_STORE;
+
+    /**
+     * The table <code>public.book_to_book_store</code>.
+     */
+    public static final BookToBookStore BOOK_TO_BOOK_STORE = BookToBookStore.BOOK_TO_BOOK_STORE;
+
+    /**
+     * The table <code>public.language</code>.
+     */
+    public static final Language LANGUAGE = Language.LANGUAGE;
 }

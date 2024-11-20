@@ -4,7 +4,12 @@
 package com.example.postgres.model;
 
 
+import com.example.postgres.model.tables.Author;
 import com.example.postgres.model.tables.Board;
+import com.example.postgres.model.tables.Book;
+import com.example.postgres.model.tables.BookStore;
+import com.example.postgres.model.tables.BookToBookStore;
+import com.example.postgres.model.tables.Language;
 
 import java.util.Arrays;
 import java.util.List;
@@ -28,9 +33,34 @@ public class Public extends SchemaImpl {
     public static final Public PUBLIC = new Public();
 
     /**
+     * The table <code>public.author</code>.
+     */
+    public final Author AUTHOR = Author.AUTHOR;
+
+    /**
      * The table <code>public.board</code>.
      */
     public final Board BOARD = Board.BOARD;
+
+    /**
+     * The table <code>public.book</code>.
+     */
+    public final Book BOOK = Book.BOOK;
+
+    /**
+     * The table <code>public.book_store</code>.
+     */
+    public final BookStore BOOK_STORE = BookStore.BOOK_STORE;
+
+    /**
+     * The table <code>public.book_to_book_store</code>.
+     */
+    public final BookToBookStore BOOK_TO_BOOK_STORE = BookToBookStore.BOOK_TO_BOOK_STORE;
+
+    /**
+     * The table <code>public.language</code>.
+     */
+    public final Language LANGUAGE = Language.LANGUAGE;
 
     /**
      * No further instances allowed
@@ -48,7 +78,12 @@ public class Public extends SchemaImpl {
     @Override
     public final List<Table<?>> getTables() {
         return Arrays.asList(
-            Board.BOARD
+            Author.AUTHOR,
+            Board.BOARD,
+            Book.BOOK,
+            BookStore.BOOK_STORE,
+            BookToBookStore.BOOK_TO_BOOK_STORE,
+            Language.LANGUAGE
         );
     }
 }
