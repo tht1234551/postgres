@@ -1,8 +1,8 @@
 package com.example.postgres.repository;
 
-import static com.example.postgres.model.Tables.BOARD;
-import com.example.postgres.model.tables.pojos.Board;
-import com.example.postgres.model.tables.records.BoardRecord;
+import static com.example.postgres.model.public_.Tables.BOARD;
+import com.example.postgres.model.public_.tables.pojos.Board;
+import com.example.postgres.model.public_.tables.records.BoardRecord;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;

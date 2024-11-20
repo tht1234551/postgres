@@ -81,7 +81,15 @@ jooq {
                     name = 'org.jooq.codegen.DefaultGenerator'
                     database {
                         name = 'org.jooq.meta.postgres.PostgresDatabase'
-                        inputSchema = 'public'
+                        schemata {
+                            schema {
+                                inputSchema = "public"
+                            }
+                            schema {
+                                inputSchema = "information_schema"
+                            }
+                        }
+//                        inputSchema = 'public'
                         includes = '.*'
                         excludes = ''
                         forcedTypes {

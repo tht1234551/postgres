@@ -4,6 +4,9 @@
 package com.example.postgres.model;
 
 
+import com.example.postgres.model.information_schema.InformationSchema;
+import com.example.postgres.model.public_.Public;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -26,6 +29,11 @@ public class DefaultCatalog extends CatalogImpl {
     public static final DefaultCatalog DEFAULT_CATALOG = new DefaultCatalog();
 
     /**
+     * The schema <code>information_schema</code>.
+     */
+    public final InformationSchema INFORMATION_SCHEMA = InformationSchema.INFORMATION_SCHEMA;
+
+    /**
      * The schema <code>public</code>.
      */
     public final Public PUBLIC = Public.PUBLIC;
@@ -40,6 +48,7 @@ public class DefaultCatalog extends CatalogImpl {
     @Override
     public final List<Schema> getSchemas() {
         return Arrays.asList(
+            InformationSchema.INFORMATION_SCHEMA,
             Public.PUBLIC
         );
     }

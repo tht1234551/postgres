@@ -1,7 +1,7 @@
 package com.example.postgres.repository;
 
-import com.example.postgres.model.tables.pojos.Board;
-import com.example.postgres.model.tables.records.BoardRecord;
+import com.example.postgres.model.public_.tables.pojos.Board;
+import com.example.postgres.model.public_.tables.records.BoardRecord;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

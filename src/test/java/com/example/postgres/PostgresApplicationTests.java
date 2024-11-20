@@ -1,20 +1,35 @@
 package com.example.postgres;
 
+import com.example.postgres.model.public_.tables.records.AuthorRecord;
+import com.example.postgres.model.public_.tables.records.BoardRecord;
 import org.jooq.*;
+
+import static com.example.postgres.model.information_schema.InformationSchema.INFORMATION_SCHEMA;
+import static com.example.postgres.model.information_schema.Tables.COLUMNS;
+import static java.util.stream.Collectors.*;
+import static org.jooq.impl.DSL.*;
+import org.jooq.*;
+import org.jooq.impl.*;
 import org.jooq.Record;
 import org.jooq.conf.ParamType;
+import org.jooq.util.xml.jaxb.Column;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.util.Assert;
 
 import java.sql.ResultSet;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import static com.example.postgres.model.Tables.AUTHOR;
-import static com.example.postgres.model.Tables.BOOK;
+import static com.example.postgres.model.public_.Tables.AUTHOR;
+import static com.example.postgres.model.public_.Tables.BOOK;
+import static com.example.postgres.model.public_.tables.Board.BOARD;
 import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.table;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 class PostgresApplicationTests {
@@ -84,5 +99,97 @@ class PostgresApplicationTests {
         System.out.println(result);
     }
 
+    @Test
+    void fetchTest3() {
+        // Use your favourite tool to construct SQL strings:
+        AuthorRecord author = dsl.fetchOne(AUTHOR, AUTHOR.ID.eq(3));
 
+        // Create a new author, if it doesn't exist yet
+        if (author == null) {
+            author = dsl.newRecord(AUTHOR);
+            author.setId(3);
+            author.setFirstName("Dan");
+            author.setLastName("Brown");
+        }
+
+        // Mark the author as a "distinguished" author and store it
+        author.setDistinguished(1);
+
+        // Executes an update on existing authors, or insert on new ones
+        author.store();
+    }
+
+    @Test
+    void fetchTest4() {
+        Result<?> result =
+                dsl
+                        .select(
+                                AUTHOR.FIRST_NAME,
+                                AUTHOR.LAST_NAME,
+                                BOOK.ID,
+                                BOOK.TITLE
+                        )
+                        .from(AUTHOR)
+                        .join(BOOK)
+                        .on(AUTHOR.ID.eq(BOOK.AUTHOR_ID))
+                        .orderBy(BOOK.ID.asc())
+                        .fetch();
+
+        System.out.println(result);
+        assertEquals(4, result.size());
+        assertEquals(Arrays.asList(1, 2, 3, 4), result.getValues(BOOK.ID));
+    }
+
+    @Test
+    void tableTest() {
+//        org.jooq.util.postgres.PostgresDSL.
+        dsl
+                .select(
+                        COLUMNS.TABLE_NAME,
+                        COLUMNS.COLUMN_NAME,
+                        COLUMNS.DATA_TYPE
+                )
+                .from(COLUMNS)
+                .orderBy(
+                        COLUMNS.TABLE_CATALOG,
+                        COLUMNS.TABLE_SCHEMA,
+                        COLUMNS.TABLE_NAME,
+                        COLUMNS.ORDINAL_POSITION
+                )
+                .fetch()  // jOOQ ends here
+                .stream() // JDK 8 Streams start here
+                .collect(groupingBy(
+                        r -> r.getValue(COLUMNS.TABLE_NAME),
+                        LinkedHashMap::new,
+                        mapping(
+                                r -> {
+                                    Column column = new Column();
+                                    column.setColumnName(r.getValue(COLUMNS.COLUMN_NAME));
+                                    column.setDataType(r.getValue(COLUMNS.DATA_TYPE));
+                                    return column;
+                                },
+                                toList()
+                        )
+                ))
+                .forEach(
+                        (table, columns) -> {
+                            // Just emit a CREATE TABLE statement
+                            System.out.println(
+                                    "CREATE TABLE " + table + " (");
+
+                            // Map each "Column" type into a String
+                            // containing the column specification,
+                            // and join them using comma and
+                            // newline. Done!
+                            System.out.println(
+                                    columns.stream()
+                                            .map(col -> "  " + col.getColumnName() +
+                                                    " " + col.getDataType())
+                                            .collect(Collectors.joining(",\n"))
+                            );
+
+                            System.out.println(");");
+                        }
+                );
+    }
 }
