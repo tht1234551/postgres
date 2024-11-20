@@ -8,6 +8,7 @@ import static com.example.postgres.model.information_schema.InformationSchema.IN
 import static com.example.postgres.model.information_schema.Tables.COLUMNS;
 import static java.util.stream.Collectors.*;
 import static org.jooq.impl.DSL.*;
+
 import org.jooq.*;
 import org.jooq.impl.*;
 import org.jooq.Record;
@@ -22,6 +23,7 @@ import java.sql.ResultSet;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import static com.example.postgres.model.public_.Tables.AUTHOR;
@@ -191,5 +193,41 @@ class PostgresApplicationTests {
                             System.out.println(");");
                         }
                 );
+    }
+
+    @Test
+    void asyncTest() {
+        // Initiate an asynchronous call chain
+        CompletableFuture
+
+                // This lambda will supply an int value indicating the number of inserted rows
+                .supplyAsync(() ->
+                        dsl
+                                .insertInto(AUTHOR, AUTHOR.ID, AUTHOR.LAST_NAME)
+                                .values(4, "Hitchcock")
+                                .execute()
+                )
+
+                // This will supply an AuthorRecord value for the newly inserted author
+                .handleAsync((rows, throwable) ->
+                        dsl
+                                .fetchOne(AUTHOR, AUTHOR.ID.eq(4))
+                )
+
+                // This should supply an int value indicating the number of rows,
+                // but in fact it'll throw a constraint violation exception
+                .handleAsync((record, throwable) -> {
+                    record.changed(true);
+                    return record.insert();
+                })
+
+                // This will supply an int value indicating the number of deleted rows
+                .handleAsync((rows, throwable) ->
+                        dsl
+                                .delete(AUTHOR)
+                                .where(AUTHOR.ID.eq(4))
+                                .execute()
+                )
+                .join();
     }
 }
