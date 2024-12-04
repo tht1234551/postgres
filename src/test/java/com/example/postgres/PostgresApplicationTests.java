@@ -47,10 +47,10 @@ class PostgresApplicationTests {
     @Test
     void makeQuery() {
         Query query = dsl.select(field("BOOK.TITLE"), field("AUTHOR.FIRST_NAME"), field("AUTHOR.LAST_NAME"))
-                .from(table("BOOK"))
-                .join(table("AUTHOR"))
-                .on(field("BOOK.AUTHOR_ID").eq(field("AUTHOR.ID")))
-                .where(field("BOOK.PUBLISHED_IN").eq(1948));
+                         .from(table("BOOK"))
+                         .join(table("AUTHOR"))
+                         .on(field("BOOK.AUTHOR_ID").eq(field("AUTHOR.ID")))
+                         .where(field("BOOK.PUBLISHED_IN").eq(1948));
         String sql = query.getSQL(ParamType.INLINED);
         System.out.println("---------");
         System.out.println(sql);
@@ -63,10 +63,10 @@ class PostgresApplicationTests {
     @Test
     void makeQuery2() {
         Query query = dsl.select(BOOK.TITLE, AUTHOR.FIRST_NAME, AUTHOR.LAST_NAME)
-                .from(BOOK)
-                .join(AUTHOR)
-                .on(BOOK.AUTHOR_ID.eq(AUTHOR.ID))
-                .where(BOOK.PUBLISHED_IN.eq(1948));
+                         .from(BOOK)
+                         .join(AUTHOR)
+                         .on(BOOK.AUTHOR_ID.eq(AUTHOR.ID))
+                         .where(BOOK.PUBLISHED_IN.eq(1948));
 
         String sql = query.getSQL(ParamType.INLINED);
         System.out.println("---------");
@@ -81,11 +81,11 @@ class PostgresApplicationTests {
     void fetchTest() {
         Result<Record3<String, String, String>> result =
                 dsl.select(BOOK.TITLE, AUTHOR.FIRST_NAME, AUTHOR.LAST_NAME)
-                        .from(BOOK)
-                        .join(AUTHOR)
-                        .on(BOOK.AUTHOR_ID.eq(AUTHOR.ID))
-                        .where(BOOK.PUBLISHED_IN.eq(1948))
-                        .fetch();
+                   .from(BOOK)
+                   .join(AUTHOR)
+                   .on(BOOK.AUTHOR_ID.eq(AUTHOR.ID))
+                   .where(BOOK.PUBLISHED_IN.eq(1948))
+                   .fetch();
 
         System.out.println(result);
     }
@@ -123,19 +123,18 @@ class PostgresApplicationTests {
 
     @Test
     void fetchTest4() {
-        Result<?> result =
-                dsl
-                        .select(
-                                AUTHOR.FIRST_NAME,
-                                AUTHOR.LAST_NAME,
-                                BOOK.ID,
-                                BOOK.TITLE
-                        )
-                        .from(AUTHOR)
-                        .join(BOOK)
-                        .on(AUTHOR.ID.eq(BOOK.AUTHOR_ID))
-                        .orderBy(BOOK.ID.asc())
-                        .fetch();
+        Result<?> result = dsl
+                .select(
+                        AUTHOR.FIRST_NAME,
+                        AUTHOR.LAST_NAME,
+                        BOOK.ID,
+                        BOOK.TITLE
+                )
+                .from(AUTHOR)
+                .join(BOOK)
+                .on(AUTHOR.ID.eq(BOOK.AUTHOR_ID))
+                .orderBy(BOOK.ID.asc())
+                .fetch();
 
         System.out.println(result);
         assertEquals(4, result.size());
@@ -185,9 +184,9 @@ class PostgresApplicationTests {
                             // newline. Done!
                             System.out.println(
                                     columns.stream()
-                                            .map(col -> "  " + col.getColumnName() +
-                                                    " " + col.getDataType())
-                                            .collect(Collectors.joining(",\n"))
+                                           .map(col -> "  " + col.getColumnName() +
+                                                   " " + col.getDataType())
+                                           .collect(Collectors.joining(",\n"))
                             );
 
                             System.out.println(");");
@@ -202,16 +201,14 @@ class PostgresApplicationTests {
 
                 // This lambda will supply an int value indicating the number of inserted rows
                 .supplyAsync(() ->
-                        dsl
-                                .insertInto(AUTHOR, AUTHOR.ID, AUTHOR.LAST_NAME)
-                                .values(4, "Hitchcock")
-                                .execute()
+                        dsl.insertInto(AUTHOR, AUTHOR.ID, AUTHOR.LAST_NAME)
+                           .values(4, "Hitchcock")
+                           .execute()
                 )
 
                 // This will supply an AuthorRecord value for the newly inserted author
                 .handleAsync((rows, throwable) ->
-                        dsl
-                                .fetchOne(AUTHOR, AUTHOR.ID.eq(4))
+                        dsl.fetchOne(AUTHOR, AUTHOR.ID.eq(4))
                 )
 
                 // This should supply an int value indicating the number of rows,
@@ -223,11 +220,20 @@ class PostgresApplicationTests {
 
                 // This will supply an int value indicating the number of deleted rows
                 .handleAsync((rows, throwable) ->
-                        dsl
-                                .delete(AUTHOR)
-                                .where(AUTHOR.ID.eq(4))
-                                .execute()
+                        dsl.delete(AUTHOR)
+                           .where(AUTHOR.ID.eq(4))
+                           .execute()
                 )
                 .join();
+    }
+
+    @Test
+    void likeTest() {
+        Result<Record> fetch = dsl.select()
+                                  .from(BOOK)
+                                  .where(BOOK.TITLE.like("Animal%"))
+                                  .fetch();
+
+        System.out.println(fetch);
     }
 }
